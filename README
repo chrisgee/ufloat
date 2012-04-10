@@ -1,0 +1,18 @@
+ufloat is a package that provides a fast floatingpoint extension type 
+with unit support.
+
+To build this package, cython is required, which can be obtained
+using
+
+$sudo easy_install cython
+
+from here, the package can be built (provided numpy is  installed)
+using
+
+$python setup.py build
+
+and installation can be done using
+
+$python setup.py install
+
+ 
