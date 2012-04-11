@@ -28,4 +28,4 @@ setup(name="ufloat",
       )
 
 if __name__ == "__main__":
-    setup()
+    pass

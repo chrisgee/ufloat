@@ -217,7 +217,7 @@ cdef dict utodict(unit* self):
 cdef object newval(double value, unit* u, copy = False):
     """helper for creating new unit values"""
     cdef ufloat res
-    if u.ndims>0 and not value == 0:
+    if u.ndims>0: # and not value == 0:
         res = ufloat(value)
         if not copy:
             res._unit = u
@@ -327,7 +327,7 @@ cdef class ufloat:
         else:
             raise Exception("why did I get here?")
         #print "self: %s, other: %s"%(s,o)
-        return newval(s._value*o, upow(s._unit,exp))
+        return newval(s._value/o, upow(s._unit,exp))
 
     def __pow__(self, other, modulo):
         #FIXME: modulo not supported (what does it?)
@@ -365,6 +365,19 @@ cdef class ufloat:
         else:
             raise Exception('how did I get here?')
 
+    def __cmp__(self, other):
+        if isinstance(self, ufloat) and isinstance(other, ufloat):
+            if ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
+                return cmp((<ufloat>self)._value,(<ufloat>other)._value)
+
+        elif isinstance(self, ufloat):
+            v = (<ufloat>self)._value
+            o = other
+        elif isinstance(other, ufloat):
+            o = (<ufloat>other)._value
+            v = self
+        return cmp(v,o)
+
     property value:
         def __get__(self):
             return self._value
@@ -376,6 +389,9 @@ cdef class ufloat:
             else:
                 raise ValueError('Quantity %s can\'t be converted to %s'%(self, other.unit))
         return self._value
+
+    def rescale(self, other):
+        return self.asNumber(other)
 
     property unit:
         def __get__(self):
@@ -403,3 +419,9 @@ cdef class ufloat:
         def __get__(self):
             """A dictionary representation of the quantitie's unit."""
             return utodict(self._unit)
+
+    #Pickling support
+    def __reduce__(self):
+        return (ufloat,
+                (self._value, self.unitDict))
+

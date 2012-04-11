@@ -1,4 +1,7 @@
-build
 \.ropeproject
 \.spyderproject
 attic
+build
+glob: *.pyc
+ufloat.c
+ufloat.so

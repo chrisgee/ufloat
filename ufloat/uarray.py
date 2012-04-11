@@ -110,7 +110,7 @@ def scale_other_units(f):
     def g(self, other, *args):
         if isinstance(other, ufloat):
             ounit = other.unitDict
-            other = np.asanyarray(other._value).view(type=UnitArray)
+            other = np.asanyarray(other.value).view(type=UnitArray)
             print ounit, other
             other._unit = ounit
         elif isinstance(other, UnitArray):
@@ -165,9 +165,11 @@ def wrap_comparison(f):
     @wraps(f)
     def g(self, other):
         if isinstance(other, UnitArray):
-            if other._unit != self._unit:
-                other = other.rescale(self._unit)
-            other = other.value
+            other = other.rescale(self.unit)
+        elif isinstance(other, ufloat):
+            other = other.rescale(self.unit)
+
+ #       print self, other
         return f(self, other)
     return g
 
@@ -204,18 +206,21 @@ class UnitArray(np.ndarray):
         return self.view(type=np.ndarray)
 
     @property
-    def units(self):
+    def unit(self):
         return ufloat(1, self._unit)
 
     @property
     def unitDict(self):
         return self._unit
 
-    def asNumber(self, other):
+    def asNumber(self, other = None):
         if other:
-            checkunit(self._unit, other._unit)
+            checkunit(self.unitDict, other.unitDict)
             return self.value/other.value
         return self._value
+
+    def rescale(self, other):
+        return self.asNumber(other)
 
     @with_doc(np.ndarray.astype)
     def astype(self, dtype=None):
@@ -386,7 +391,7 @@ class UnitArray(np.ndarray):
     def __eq__(self, other):
         if isinstance(other, UnitArray):
             try:
-                other = other.rescale(self._unit).value
+                other = other.rescale(self.unit)
             except ValueError:
                 return np.zeros(self.shape, '?')
         return self.value == other
@@ -395,7 +400,7 @@ class UnitArray(np.ndarray):
     def __ne__(self, other):
         if isinstance(other, UnitArray):
             try:
-                other = other.rescale(self._unit).value
+                other = other.rescale(self.unit)
             except ValueError:
                 return np.ones(self.shape, '?')
         return self.value != other
@@ -632,7 +637,7 @@ def _reconstruct_quantity(subtype, baseclass, baseshape, basetype,):
 
     """
     _data = np.ndarray.__new__(baseclass, baseshape, basetype)
-    return subtype.__new__(subtype, _data, dtype=basetype,)
+    return subtype.__new__(subtype, _data, dtype=basetype, unitdef = True, copy=False)
 
 p_dict = {}
 
@@ -664,7 +669,7 @@ def _d_check_uniform(q1, q2, out=None):
     except AssertionError:
         raise ValueError(
             'quantities must have identical units, got "%s" and "%s"' %
-            (q1.units, q2.units)
+            (q1.unit, q2.unit)
         )
     except AttributeError:
         try:
@@ -683,7 +688,7 @@ def _d_check_uniform(q1, q2, out=None):
         except ValueError:
             raise ValueError(
                 'quantities must have identical units, got "%s" and "%s"' %
-                (q1.units, q2.units)
+                (q1.unit, q2.unit)
             )
 
 p_dict[np.add] = _d_check_uniform
