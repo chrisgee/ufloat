@@ -222,6 +222,10 @@ class UnitArray(np.ndarray):
     def rescale(self, other):
         return self.asNumber(other)
 
+    @property
+    def symbol(self):
+        return format_unit(self._unit)
+
     @with_doc(np.ndarray.astype)
     def astype(self, dtype=None):
         '''Scalars are returned as scalar ufloat numbers.'''

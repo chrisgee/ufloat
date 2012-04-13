@@ -420,6 +420,11 @@ cdef class ufloat:
             """A dictionary representation of the quantitie's unit."""
             return utodict(self._unit)
 
+    property symbol:
+        def __get__(self):
+            """a string representation of the dimension"""
+            return uformat(self._unit)
+
     #Pickling support
     def __reduce__(self):
         return (ufloat,
