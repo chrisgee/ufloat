@@ -309,6 +309,7 @@ cdef class ufloat:
     def __div__(self, other):
         cdef ufloat s
         cdef int exp
+#        print self, other
         if isinstance(other, ufloat) and isinstance(self, ufloat):
                 return newval((<ufloat>self)._value/(<ufloat>other)._value,
                               umul((<ufloat>self)._unit,(<ufloat>other)._unit,-1))
@@ -316,6 +317,7 @@ cdef class ufloat:
             s = other
             o = self
             exp = -1
+            return newval(o/s._value, upow(s._unit,-1))
         elif isinstance(self, ufloat):
             if isinstance(other, ndarray):
                 ounit = getattr(other,'unitDict',{})
@@ -326,7 +328,7 @@ cdef class ufloat:
             exp = 1
         else:
             raise Exception("why did I get here?")
-        #print "self: %s, other: %s"%(s,o)
+#        print "self: %s, other: %s"%(s,o)
         return newval(s._value/o, upow(s._unit,exp))
 
     def __pow__(self, other, modulo):
@@ -349,7 +351,7 @@ cdef class ufloat:
                 ovalue = getattr(other, 'value', other)
                 return UnitArray((<ufloat>self)._value+ovalue, (<ufloat>self).unitDict)
 
-        raise ValueError('Can\'t two quantities with differnt units %s and %s.'%(self, other))
+        raise ValueError('Can\'t add two quantities with differnt units %s and %s.'%(self, other))
 
     def __sub__(self, other):
         if isinstance(other, ufloat) and isinstance(self, ufloat) and ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
@@ -357,7 +359,7 @@ cdef class ufloat:
         elif isinstance(self, ufloat) and isinstance(other, ndarray):
             if self.unitDict == getattr(other, 'unitDict', {}):
                 return UnitArray((<ufloat>self)._value-other.value, (<ufloat>self).unitDict)
-        raise ValueError('Can\'t two quantities with differnt units %s and %s.'%(self, other))
+        raise ValueError('Can\'t subtract two quantities with differnt units %s and %s.'%(self, other))
 
     def __neg__(self):
         if isinstance(self, ufloat):
