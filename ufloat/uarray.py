@@ -111,7 +111,7 @@ def scale_other_units(f):
         if isinstance(other, ufloat):
             ounit = other.unitDict
             other = np.asanyarray(other.value).view(type=UnitArray)
-            print ounit, other
+            #print ounit, other
             other._unit = ounit
         elif isinstance(other, UnitArray):
             ounit = other._unit
