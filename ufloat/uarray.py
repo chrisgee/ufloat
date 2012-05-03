@@ -217,7 +217,7 @@ class UnitArray(np.ndarray):
         if other:
             checkunit(self.unitDict, other.unitDict)
             return self.value/other.value
-        return self._value
+        return self.value
 
     def rescale(self, other):
         return self.asNumber(other)
