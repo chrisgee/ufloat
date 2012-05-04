@@ -390,6 +390,11 @@ cdef class ufloat:
                 return self._value/((<ufloat>other)._value)
             else:
                 raise ValueError('Quantity %s can\'t be converted to %s'%(self, other.unit))
+        elif isinstance(other, UnitArray):
+            if self.unitDict == other.unitDict:
+                return self._value/(other.value)
+            else:
+                raise ValueError('Quantity %s can\'t be converted to %s'%(self, other.unit))
         return self._value
 
     def rescale(self, other):
