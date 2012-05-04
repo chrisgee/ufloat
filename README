@@ -11,6 +11,11 @@ using
 
 $python setup.py build
 
+if you are on windows and are using python(x,y), you have the mingw32 compiler
+installed. Then instead of the above you should use
+
+$ python setup.py build -cmingw32
+
 and installation can be done using
 
 $python setup.py install
