@@ -180,7 +180,7 @@ cdef unit* umul(unit* self, unit* other, float sign = 1) except NULL:
             newi += 1
 
     u.dims = <dim *>realloc(u.dims, newi*sizeof(dim))
-    if u.dims == NULL:
+    if newi is not 0 and u.dims == NULL:
         ufree(u)
         raise MemoryError('failed to realloc dimensions memory')
     u.ndims = newi
