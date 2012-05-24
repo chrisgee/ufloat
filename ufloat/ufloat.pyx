@@ -16,6 +16,8 @@ from libc.stdlib cimport malloc, free, realloc
 
 from uarray import UnitArray, mulunit, divunit, powunit
 from numpy import ndarray
+import uarray
+
 
 cdef extern from "stdio.h":
    int printf(char*,...)
@@ -164,9 +166,9 @@ cdef unit* umul(unit* self, unit* other, float sign = 1) except NULL:
         a = other.dims[i].name
         exp = sign*other.dims[i].exponent
         for j in xrange(self.ndims):
-            if self.dims[i].name==a:
-                exp += self.dims[i].exponent
-                sused[i] = 1
+            if self.dims[j].name==a:
+                exp += self.dims[j].exponent
+                sused[j] = 1
                 break
         if not exp == 0:
             u.dims[newi].name = a
@@ -285,6 +287,8 @@ cdef class ufloat:
         return '%s [%s]'%(self._value, uformat(self._unit))
 
     def __repr__(self):
+        if uarray.STRREP:
+            return self.__str__()
         return '%s(%s, %s)'%(
             self.__class__.__name__, repr(self._value), repr(utodict(self._unit)))
 

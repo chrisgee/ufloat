@@ -9,10 +9,10 @@ All the units conversion stuff has been removed including all the logic
 around it to speed up things. It integrates with a scalar float class with
 units 'ufloat' that is a cython extension type.
 """
-from ufloat import ufloat
 import numpy as np
 from functools import wraps
 import sys
+STRREP = False
 
 def mulunit(unit1, unit2):
     u = unit1.copy()
@@ -58,29 +58,6 @@ def format_unit(unit):
 
     return nom.strip()+fill+denom.strip()
 
-def unit_from_string(st):
-    """the inverse of format_unit.
-
-    It's not exacly the inverse since the dict does not prescribe a order of
-    string representation, i.e. format_unit(. However it should be gueranteed that
-    unit_from_string(format_unit(unit))==unit"""
-    nom, denom = st.split('/')
-    nitems = nom.split(' ')
-    ditems = denom.split(' ')
-    udict = {}
-    for it in nitems:
-        l = it.split('**')
-        if len(l)>1:
-            udict[l[0]]=float(l[1])
-        else:
-            udict[l[0]]=1
-    for it in ditems:
-        l = it.split('**')
-        if len(l)>1:
-            udict[l[0]]=-float(l[1])
-        else:
-            udict[l[0]]=-1
-    return udict
 
 def powunit(unit, exp):
     u = {}
@@ -130,6 +107,7 @@ class with_doc:
         return new_method
 
 def scale_other_units(f):
+    from ufloat import ufloat
     @wraps(f)
     def g(self, other, *args):
         if isinstance(other, ufloat):
@@ -186,6 +164,7 @@ def protected_power(f):
     return g
 
 def wrap_comparison(f):
+    from ufloat import ufloat
     @wraps(f)
     def g(self, other):
         if isinstance(other, UnitArray):
@@ -200,10 +179,12 @@ def wrap_comparison(f):
 
 class UnitArray(np.ndarray):
 
+
     # TODO: what is an appropriate value?
     __array_priority__ = 21
 
     def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True):
+        from ufloat import ufloat
         if isinstance(data, cls):
             if units and checkunit:
                 checkunit(data._unit, units)
@@ -231,6 +212,7 @@ class UnitArray(np.ndarray):
 
     @property
     def unit(self):
+        from ufloat import ufloat
         return ufloat(1, self._unit)
 
     @property
@@ -252,6 +234,7 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.astype)
     def astype(self, dtype=None):
+        from ufloat import ufloat
         '''Scalars are returned as scalar ufloat numbers.'''
         ret = super(UnitArray, self).astype(dtype)
         # scalar quantities get converted to plain numbers, so we fix it
@@ -382,6 +365,8 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.__repr__)
     def __repr__(self):
+        if STRREP:
+            return self.__str__()
         return '%s(%s, %s)'%(
             self.__class__.__name__, repr(self.value), repr(self._unit)
         )
@@ -395,7 +380,7 @@ class UnitArray(np.ndarray):
     @with_doc(np.ndarray.__str__)
     def __str__(self):
         dims = format_unit(self._unit)
-        return '%s [%s]'%(str(self.value), dims)
+        return '%s [%s]'%(repr(self.value), dims)
 
     @with_doc(np.ndarray.__getitem__)
     def __getitem__(self, key):
@@ -831,6 +816,7 @@ p_dict[np.arctanh] = _d_arctrig
 
 
 if __name__ == '__main__':
+    from ufloat import ufloat
     s = UnitArray(1, {'s':1}, unitdef = True)
     m = UnitArray(1, {'m':1}, unitdef = True)
     ss = ufloat(1, {'s':1})
