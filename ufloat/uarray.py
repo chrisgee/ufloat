@@ -58,6 +58,30 @@ def format_unit(unit):
 
     return nom.strip()+fill+denom.strip()
 
+def unit_from_string(st):
+    """the inverse of format_unit.
+
+    It's not exacly the inverse since the dict does not prescribe a order of
+    string representation, i.e. format_unit(. However it should be gueranteed that
+    unit_from_string(format_unit(unit))==unit"""
+    nom, denom = st.split('/')
+    nitems = nom.split(' ')
+    ditems = denom.split(' ')
+    udict = {}
+    for it in nitems:
+        l = it.split('**')
+        if len(l)>1:
+            udict[l[0]]=float(l[1])
+        else:
+            udict[l[0]]=1
+    for it in ditems:
+        l = it.split('**')
+        if len(l)>1:
+            udict[l[0]]=-float(l[1])
+        else:
+            udict[l[0]]=-1
+    return udict
+
 def powunit(unit, exp):
     u = {}
     for unit, e in unit.iteritems():
@@ -355,16 +379,23 @@ class UnitArray(np.ndarray):
     def __round__(self, decimals=0):
         return np.around(self, decimals)
 
+
     @with_doc(np.ndarray.__repr__)
     def __repr__(self):
-        return '%s * %s'%(
-            repr(self.value), format_unit(self._unit)
+        return '%s(%s, %s)'%(
+            self.__class__.__name__, repr(self.value), repr(self._unit)
         )
+
+#    @with_doc(np.ndarray.__repr__)
+#    def __repr__(self):
+#        return '%s * %s'%(
+#            repr(self.value), format_unit(self._unit)
+#        )
 
     @with_doc(np.ndarray.__str__)
     def __str__(self):
         dims = format_unit(self._unit)
-        return '%s %s'%(str(self.value), dims)
+        return '%s [%s]'%(str(self.value), dims)
 
     @with_doc(np.ndarray.__getitem__)
     def __getitem__(self, key):

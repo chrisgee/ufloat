@@ -285,7 +285,8 @@ cdef class ufloat:
         return '%s [%s]'%(self._value, uformat(self._unit))
 
     def __repr__(self):
-        return self.__str__()
+        return '%s(%s, %s)'%(
+            self.__class__.__name__, repr(self._value), repr(utodict(self._unit)))
 
     def __mul__(self, other):
         cdef ufloat s
