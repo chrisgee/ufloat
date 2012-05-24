@@ -2,6 +2,7 @@
 \.spyderproject
 attic
 build
-glob: *.pyc
+syntax: glob 
+*.pyc
 ufloat.c
 ufloat.so
