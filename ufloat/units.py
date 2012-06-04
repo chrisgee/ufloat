@@ -21,6 +21,8 @@ Hz = 1/s
 kHz = 1000*Hz
 MHz = 1000*kHz
 GHz = 1000*MHz
+mHz = 0.001*Hz
+uHz = 0.001*mHz
 V = u(1,{'V':1})
 mV = 0.001*V
 uV = 0.001*mV
@@ -32,3 +34,4 @@ uA = 0.001*mA
 kA = 1000*A
 MA = 1000*kA
 #add more units here!
+dBm = u(1., {'dBm':1})
