@@ -6,3 +6,5 @@ syntax: glob
 *.pyc
 ufloat.c
 ufloat.so
+ufloat/cufloat\.c
+ufloat/cufloat\.so

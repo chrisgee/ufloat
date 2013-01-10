@@ -47,10 +47,10 @@ def unit_from_string(st):
         raise ValueError('can\'t parse string %s'%st)
     else:
         denom = ''
-    print denom, nom
+    #print denom, nom
     nitems = nom.split(' ')
     ditems = denom.split(' ')
-    print nitems, ditems
+    #print nitems, ditems
     udict = {}
     for it in nitems:
         if it.strip() == '1' or it.strip() == '':
