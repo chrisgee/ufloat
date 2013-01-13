@@ -35,3 +35,13 @@ kA = 1000*A
 MA = 1000*kA
 #add more units here!
 dBm = u(1., {'dBm':1})
+#weight
+kg = u(1., {'kg':1})
+g = 1e-3*kg
+mg = 1e-6*kg
+ug = 1e-9*kg
+#temperature
+K = u(1., {'K':1})
+mK = 1e-3*K
+uK = 1e-6*K
+nK = 1e-9*K
