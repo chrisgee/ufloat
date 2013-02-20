@@ -45,3 +45,11 @@ K = u(1., {'K':1})
 mK = 1e-3*K
 uK = 1e-6*K
 nK = 1e-9*K
+#magnetic
+G = u(1,{'G':1})
+mG = 1e-3*G
+uG = 1e-3*mG
+nG = 1e-3*uG
+pG = 1e-3*nG
+kG = 1e3 * G
+MG = 1e3 * kG
