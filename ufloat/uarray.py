@@ -181,7 +181,7 @@ class UnitArray(np.ndarray):
 
 
     # TODO: what is an appropriate value?
-    __array_priority__ = 21
+    __array_priority__ = 5
 
     def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True):
         from ufloat import ufloat

@@ -242,7 +242,8 @@ cdef class ufloat:
 #    cdef int _unit
     cdef double _value
     cdef unit* _unit
-
+    prefixmap = {'f':-15,'p':-12,'n':-9,'u':-6,'m':-3, 'k':3, 'M':6, 'G':9, 'T':12, 'P':15}
+    __array_priority__ = 10
     def __cinit__(self, value, u = None):
         """Create a new floatingpoint number with units
 
@@ -294,15 +295,22 @@ cdef class ufloat:
 
     def __mul__(self, other):
         cdef ufloat s
+#        print 'mul', self, other
         if isinstance(other, ufloat) and isinstance(self, ufloat):
                 return newval((<ufloat>self)._value*(<ufloat>other)._value, umul((<ufloat>self)._unit,(<ufloat>other)._unit))
         elif isinstance(other, ufloat):
+            if isinstance(self, ndarray):
+                ounit = getattr(self,'unitDict',{})
+                ovalue = getattr(self, 'value', self)
+#                print 'self', ounit, ovalue
+                return UnitArray(<ufloat>other.value*ovalue,mulunit(other.unitDict, ounit), checkunit = False)
             s = other
             o = self
         elif isinstance(self, ufloat):
             if isinstance(other, ndarray):
                 ounit = getattr(other,'unitDict',{})
                 ovalue = getattr(other, 'value', other)
+#                print 'other', ounit, ovalue
                 return UnitArray(<ufloat>self.value*ovalue,mulunit(self.unitDict, ounit), checkunit = False)
             s = self
             o = other
@@ -319,6 +327,10 @@ cdef class ufloat:
                 return newval((<ufloat>self)._value/(<ufloat>other)._value,
                               umul((<ufloat>self)._unit,(<ufloat>other)._unit,-1))
         elif isinstance(other, ufloat):
+            if isinstance(self, ndarray):
+                ounit = getattr(self,'unitDict',{})
+                ovalue = getattr(self, 'value', other)
+                return UnitArray(<ufloat>other.value*ovalue,divunit(ounit, other.unitDict), checkunit = False)
             s = other
             o = self
             exp = -1
@@ -335,7 +347,7 @@ cdef class ufloat:
             raise Exception("why did I get here?")
 #        print "self: %s, other: %s"%(s,o)
         return newval(s._value/o, upow(s._unit,exp))
-
+    
     def __pow__(self, other, modulo):
         #FIXME: modulo not supported (what does it?)
         cdef ufloat s
@@ -351,19 +363,24 @@ cdef class ufloat:
     def __add__(self, other):
         if isinstance(other, ufloat) and isinstance(self, ufloat) and ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
             return newval((<ufloat>self)._value + (<ufloat>other)._value, (<ufloat>self)._unit, True)
-        elif isinstance(self, ufloat) and isinstance(other, ndarray):
-            if self.unitDict == getattr(other, 'unitDict', {}):
+        elif isinstance(other, ndarray) or isinstance(self, ndarray):
+            udict = getattr(self, 'unitDict', {})
+            if udict == getattr(other, 'unitDict', {}):
+                svalue = getattr(self, 'value', self)
                 ovalue = getattr(other, 'value', other)
-                return UnitArray((<ufloat>self)._value+ovalue, (<ufloat>self).unitDict)
+                return UnitArray((svalue+ovalue, udict))
 
         raise ValueError('Can\'t add two quantities with differnt units %s and %s.'%(self, other))
 
     def __sub__(self, other):
         if isinstance(other, ufloat) and isinstance(self, ufloat) and ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
             return newval((<ufloat>self)._value - (<ufloat>other)._value, (<ufloat>self)._unit, True)
-        elif isinstance(self, ufloat) and isinstance(other, ndarray):
-            if self.unitDict == getattr(other, 'unitDict', {}):
-                return UnitArray((<ufloat>self)._value-other.value, (<ufloat>self).unitDict)
+        elif isinstance(other, ndarray) or isinstance(self, ndarray):
+            udict = getattr(self, 'unitDict', {})
+            if udict == getattr(other, 'unitDict', {}):
+                svalue = getattr(self, 'value', self)
+                ovalue = getattr(other, 'value', other)
+                return UnitArray((svalue-ovalue, udict))
         raise ValueError('Can\'t subtract two quantities with differnt units %s and %s.'%(self, other))
 
     def __neg__(self):
