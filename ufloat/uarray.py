@@ -35,6 +35,14 @@ def divunit(unit1, unit2):
         else:
             u[a] = -exp
     return u
+    
+def simplify_unit(unit):
+    u = unit.copy()
+    for un in unit:
+        if u[un]==0:
+            u.pop(un)
+    
+    return u
 
 def format_unit(unit):
     nom = ''
@@ -185,26 +193,35 @@ class UnitArray(np.ndarray):
 
     def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True):
         from ufloat import ufloat
+        #print 'new', cls, data, units
         if isinstance(data, cls):
             if units and checkunit:
                 checkunit(data._unit, units)
+            #print 'new unit array', units
             return np.array(data, dtype=dtype, copy=copy, subok=True)
         elif not unitdef:
+            #print 'new from array', units
             try:
                 l = len(data)
             except:
                 l = 0
             if l <= 1:
                 if hasattr(data,'_unit'):
+                    if data._unit == {}:
+                        return data.value
                     return ufloat(data.value, data._unit)
-                elif units:
+                elif units and not units == {}:
                     return ufloat(data, units)
                 else:
                     return data
 
-        ret = np.array(data, dtype=dtype, copy=copy).view(cls)
-        ret._unit = units
+        if units and not units == {}:        
+            ret = np.array(data, dtype=dtype, copy=copy).view(cls)
+            ret._unit = units
+        else:
+            ret = np.array(data, dtype=dtype, copy=copy)
         return ret
+
 
     @property
     def value(self):
@@ -239,6 +256,7 @@ class UnitArray(np.ndarray):
         ret = super(UnitArray, self).astype(dtype)
         # scalar quantities get converted to plain numbers, so we fix it
         # might be related to numpy ticket # 826
+        #print 'astype', self, dtype
         if not isinstance(ret, type(self)):
             return ufloat(ret, self._unit)
             if self.__array_priority__ >= UnitArray.__array_priority__:
@@ -249,28 +267,34 @@ class UnitArray(np.ndarray):
         return ret
 
     def __array_finalize__(self, obj):
+        #print 'finalize', self, obj
         self._unit = getattr(obj, '_unit', {})
 
     def __array_prepare__(self, obj, context=None):
-        if self.__array_priority__ >= UnitArray.__array_priority__:
-            res = obj if isinstance(obj, type(self)) else obj.view(type(self))
+        #print 'prepare', self, obj, context
+        if context is not None:
+            uf, objs, huh = context
+            if uf.__name__.startswith('is'):
+                return obj
+            #print self, obj, res, uf, objs
+            try:
+                _unit = p_dict[uf](*objs)
+            except KeyError:
+                print 'ufunc %r not supported by units' % uf
         else:
-            # don't want a UnitUnitArray
+            _unit = {}
+            
+        #print 'prepare unit', _unit
+        if not _unit == {}:
             res = obj.view(UnitArray)
-        if context is None:
-            return res
-
-        uf, objs, huh = context
-        if uf.__name__.startswith('is'):
-            return obj
-        #print self, obj, res, uf, objs
-        try:
-            res._unit = p_dict[uf](*objs)
-        except KeyError:
-            print 'ufunc %r not supported by units' % uf
+            res._unit = _unit
+        else:
+            res = obj
+        #print 'prepare result', res
         return res
 
     def __array_wrap__(self, obj, context=None):
+        #print 'wrap', self, obj, context
         if not isinstance(obj, UnitArray):
             # backwards compatibility with numpy-1.3
             obj = self.__array_prepare__(obj, context)
@@ -379,7 +403,7 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.__str__)
     def __str__(self):
-        dims = format_unit(self._unit)
+        dims = format_unit(getattr(self,'_unit',{}))
         return '%s [%s]'%(repr(self.value), dims)
 
     @with_doc(np.ndarray.__getitem__)
@@ -409,11 +433,10 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.__eq__)
     def __eq__(self, other):
-        if isinstance(other, UnitArray):
-            try:
-                other = other.rescale(self.unit)
-            except ValueError:
-                return np.zeros(self.shape, '?')
+        try:
+            other = other.rescale(self.unit)
+        except (ValueError, AttributeError):
+            return np.zeros(self.shape, '?')
         return self.value == other
 
     @with_doc(np.ndarray.__ne__)

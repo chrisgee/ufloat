@@ -328,9 +328,10 @@ cdef class ufloat:
                               umul((<ufloat>self)._unit,(<ufloat>other)._unit,-1))
         elif isinstance(other, ufloat):
             if isinstance(self, ndarray):
+                #print 'self.nd, other float'
                 ounit = getattr(self,'unitDict',{})
-                ovalue = getattr(self, 'value', other)
-                return UnitArray(<ufloat>other.value*ovalue,divunit(ounit, other.unitDict), checkunit = False)
+                ovalue = getattr(self, 'value', self)
+                return UnitArray(ovalue/<ufloat>other.value,divunit(ounit, other.unitDict), checkunit = False)
             s = other
             o = self
             exp = -1
@@ -368,7 +369,7 @@ cdef class ufloat:
             if udict == getattr(other, 'unitDict', {}):
                 svalue = getattr(self, 'value', self)
                 ovalue = getattr(other, 'value', other)
-                return UnitArray((svalue+ovalue, udict))
+                return UnitArray(svalue+ovalue, udict)
 
         raise ValueError('Can\'t add two quantities with differnt units %s and %s.'%(self, other))
 
@@ -380,7 +381,7 @@ cdef class ufloat:
             if udict == getattr(other, 'unitDict', {}):
                 svalue = getattr(self, 'value', self)
                 ovalue = getattr(other, 'value', other)
-                return UnitArray((svalue-ovalue, udict))
+                return UnitArray(svalue-ovalue, udict)
         raise ValueError('Can\'t subtract two quantities with differnt units %s and %s.'%(self, other))
 
     def __neg__(self):
@@ -390,16 +391,23 @@ cdef class ufloat:
             raise Exception('how did I get here?')
 
     def __cmp__(self, other):
+        #print 'cmp', self, other
         if isinstance(self, ufloat) and isinstance(other, ufloat):
             if ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
                 return cmp((<ufloat>self)._value,(<ufloat>other)._value)
 
         elif isinstance(self, ufloat):
             v = (<ufloat>self)._value
-            o = other
+            o = getattr(other, 'value', other)
+            if o is not other:
+                #print 'here'
+                return NotImplemented
         elif isinstance(other, ufloat):
             o = (<ufloat>other)._value
-            v = self
+            v = getattr(self, 'value', self)
+            if v is not self:
+                #print 'there'
+                return NotImplemented
         return cmp(v,o)
 
     property value:
