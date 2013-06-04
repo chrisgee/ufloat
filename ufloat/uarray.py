@@ -191,7 +191,7 @@ class UnitArray(np.ndarray):
     # TODO: what is an appropriate value?
     __array_priority__ = 5
 
-    def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True):
+    def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True, reconstruct=False):
         from ufloat import ufloat
         #print 'new', cls, data, units
         if isinstance(data, cls):
@@ -215,7 +215,7 @@ class UnitArray(np.ndarray):
                 else:
                     return data
 
-        if units and not units == {}:        
+        if units and not units == {} or reconstruct:        
             ret = np.array(data, dtype=dtype, copy=copy).view(cls)
             ret._unit = units
         else:
@@ -680,7 +680,7 @@ def _reconstruct_quantity(subtype, baseclass, baseshape, basetype,):
 
     """
     _data = np.ndarray.__new__(baseclass, baseshape, basetype)
-    return subtype.__new__(subtype, _data, dtype=basetype, unitdef = True, copy=False)
+    return subtype.__new__(subtype, _data, dtype=basetype, unitdef = True, copy=False, reconstruct=True)
 
 p_dict = {}
 
