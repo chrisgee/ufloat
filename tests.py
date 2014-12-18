@@ -24,9 +24,9 @@ def is_array(thing):
 l = list(flatten([[d*u for u in units] for d in data], scalarp=is_array))
 v = list(flatten([[d for u in units] for d in data], scalarp=is_array))
 u = list(flatten([[u for u in units] for d in data], scalarp=is_array))
-print l
-print v
-print u
+#print l
+#print v
+#print u
 
 def basicmul():
     assert(5*f.s == ufloat(5,{'s':1}))
@@ -42,25 +42,25 @@ def basicdiv():
     assert(a.s/a.m == UnitArray(1,{'s':1,'m':-1}))
 
 def mul():
-    print 'mul'
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             result = (lv*rv)*(lu*ru)            
-            print left, '*', right, '=', result 
+            #print left, '*', right, '=', result 
             assert(all(left*right == result))
-        
+    print 'multiplication ... passed'
+
 def div():
-    print 'div'
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             result = (lv/rv)*(lu/ru)         
-            print left, '/', right, '=', result 
+            #print left, '/', right, '=', result 
             assert(all(left/right == result))
+    print 'division ... passed'
+
 
 def add():
-    print 'add'
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
@@ -69,11 +69,11 @@ def add():
             except:
                 continue
             result = (lv+rv)*(ru)
-            print left, '+', right, '=', result 
+            #print left, '+', right, '=', result 
             assert(all(left+right == result))
+    print 'add ... passed'
 
 def sub():
-    print 'sub'
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
@@ -82,11 +82,11 @@ def sub():
             except:
                 continue
             result = (lv-rv)*(ru)
-            print left, '-', right, '=', result 
+            #print left, '-', right, '=', result 
             assert(all(left-right == result))
+    print 'subtract ... passed'
 
 def pow():
-    print 'pow'
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right in v:
@@ -97,9 +97,10 @@ def pow():
             except:
                 pass
             result = (lv**right)*lu**right
-            print left, '**', right, '=', result 
+            #print left, '**', right, '=', result 
             assert(all(left**right == result))
-
+    print 'power ... passed'
+    
 basicmul()
 basicdiv()
 mul()
@@ -107,3 +108,4 @@ div()
 add()
 sub()
 pow()
+print 'all tests passed'

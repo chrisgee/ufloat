@@ -393,21 +393,35 @@ cdef class ufloat:
     def __cmp__(self, other):
         #print 'cmp', self, other
         if isinstance(self, ufloat) and isinstance(other, ufloat):
-            if ucmp((<ufloat>self)._unit, (<ufloat>other)._unit):
+            c = ucmp((<ufloat>self)._unit, (<ufloat>other)._unit)
+#            print 'and here', c            
+            if c==1:
+#                print 'c = %d'%c
                 return cmp((<ufloat>self)._value,(<ufloat>other)._value)
+            else:
+                pass
+#               print 'else, c = %d'%c
+#            print 'toll'
+            v = 1; o = 0
 
         elif isinstance(self, ufloat):
+#            print 'here'
             v = (<ufloat>self)._value
             o = getattr(other, 'value', other)
             if o is not other:
-                #print 'here'
                 return NotImplemented
         elif isinstance(other, ufloat):
+#            print 'there'
             o = (<ufloat>other)._value
             v = getattr(self, 'value', self)
             if v is not self:
-                #print 'there'
                 return NotImplemented
+        else:
+            print 'why did we end up here!?', self, other
+            v = self
+            o = other
+            raise ValueError('why here? %s, %s'%(v,o))
+ #       print 'why return?'
         return cmp(v,o)
 
     property value:
