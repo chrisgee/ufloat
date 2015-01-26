@@ -390,40 +390,38 @@ cdef class ufloat:
         else:
             raise Exception('how did I get here?')
 
-    def __cmp__(self, other):
-        #print 'cmp', self, other
+    def __richcmp__(self, other, op):
         if isinstance(self, ufloat) and isinstance(other, ufloat):
             c = ucmp((<ufloat>self)._unit, (<ufloat>other)._unit)
-#            print 'and here', c            
-            if c==1:
-#                print 'c = %d'%c
-                return cmp((<ufloat>self)._value,(<ufloat>other)._value)
+            if c==1:        
+                v = (<ufloat>self)._value
+                o = (<ufloat>other)._value
+                if op == 0:
+                    #le
+                    result = v<o
+                elif op == 2:
+                    #eq
+                    result = v==o
+                elif op == 4:
+                    #gr
+                    result = v>o
+                elif op == 1:
+                    #leq
+                    result = v<=o
+                elif op == 3:
+                    #neq
+                    result = v!=o
+                elif op == 5:
+                    #geq
+                    result = v>=o
+                else:
+                    raise ValueError('unknown op %d.'%op)
             else:
-                pass
-#               print 'else, c = %d'%c
-#            print 'toll'
-            v = 1; o = 0
-
-        elif isinstance(self, ufloat):
-#            print 'here'
-            v = (<ufloat>self)._value
-            o = getattr(other, 'value', other)
-            if o is not other:
-                return NotImplemented
-        elif isinstance(other, ufloat):
-#            print 'there'
-            o = (<ufloat>other)._value
-            v = getattr(self, 'value', self)
-            if v is not self:
-                return NotImplemented
+                raise ValueError('can\'t compare apples to peaches')
         else:
-            print 'why did we end up here!?', self, other
-            v = self
-            o = other
-            raise ValueError('why here? %s, %s'%(v,o))
- #       print 'why return?'
-        return cmp(v,o)
-
+            raise ValueError('can\'t compare to values without unit')
+        return result
+        
     property value:
         def __get__(self):
             return self._value

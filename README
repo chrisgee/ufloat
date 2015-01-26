@@ -4,12 +4,16 @@ with unit support.
 To build this package, cython is required, which can be obtained
 using
 
-$sudo easy_install cython
+$ sudo easy_install cython 
+
+or using pip
+
+$ pip install cython
 
 from here, the package can be built (provided numpy is  installed)
 using
 
-$python setup.py build
+$ python setup.py build
 
 if you are on windows and are using python(x,y), you have the mingw32 compiler
 installed. Then instead of the above you should use
@@ -18,6 +22,11 @@ $ python setup.py build -cmingw32
 
 and installation can be done using
 
-$python setup.py install
+$ python setup.py install
 
+If you are on windows and using a 64bit build of cPython (for version 2.7 this
+is usually built with the microsoft C compiler MSVC 9, which can be obtained here
+http://www.microsoft.com/en-us/download/details.aspx?id=44266)
+
+ 
  
