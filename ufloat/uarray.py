@@ -115,7 +115,7 @@ class with_doc:
         return new_method
 
 def scale_other_units(f):
-    from ufloat import ufloat
+    from .ufloat import ufloat
     @wraps(f)
     def g(self, other, *args):
         if isinstance(other, ufloat):
@@ -172,7 +172,7 @@ def protected_power(f):
     return g
 
 def wrap_comparison(f):
-    from ufloat import ufloat
+    from .ufloat import ufloat
     @wraps(f)
     def g(self, other):
         if isinstance(other, UnitArray):
@@ -180,7 +180,7 @@ def wrap_comparison(f):
         elif isinstance(other, ufloat):
             other = other.rescale(self.unit)
 
- #       print self, other
+        #print 'comparison', self, other
         return f(self, other)
     return g
 
@@ -192,7 +192,7 @@ class UnitArray(np.ndarray):
     __array_priority__ = 5
 
     def __new__(cls, data, units={}, checkunit = True, unitdef = False, dtype=None, copy=True, reconstruct=False):
-        from ufloat import ufloat
+        from .ufloat import ufloat
         #print 'new', cls, data, units
         if isinstance(data, cls):
             if units and checkunit:
@@ -229,7 +229,7 @@ class UnitArray(np.ndarray):
 
     @property
     def unit(self):
-        from ufloat import ufloat
+        from .ufloat import ufloat
         return ufloat(1, self._unit)
 
     @property
@@ -251,7 +251,7 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.astype)
     def astype(self, dtype=None):
-        from ufloat import ufloat
+        from .ufloat import ufloat
         '''Scalars are returned as scalar ufloat numbers.'''
         ret = super(UnitArray, self).astype(dtype)
         # scalar quantities get converted to plain numbers, so we fix it
@@ -280,7 +280,7 @@ class UnitArray(np.ndarray):
             try:
                 _unit = p_dict[uf](*objs)
             except KeyError:
-                print 'ufunc %r not supported by units' % uf
+                raise ValueError('ufunc %r not supported by units' % uf)
         else:
             _unit = {}
             
@@ -424,12 +424,12 @@ class UnitArray(np.ndarray):
     @with_doc(np.ndarray.__lt__)
     @wrap_comparison
     def __lt__(self, other):
-        return self.value < other
+        return self.value < getattr(other, 'value', other)
 
     @with_doc(np.ndarray.__le__)
     @wrap_comparison
     def __le__(self, other):
-        return self.value <= other
+        return self.value <= getattr(other, 'value', other)
 
     @with_doc(np.ndarray.__eq__)
     def __eq__(self, other):
@@ -441,13 +441,15 @@ class UnitArray(np.ndarray):
 
     @with_doc(np.ndarray.__ne__)
     def __ne__(self, other):
-        if isinstance(other, UnitArray):
-            try:
-                other = other.rescale(self.unit)
-            except ValueError:
-                return np.ones(self.shape, '?')
+        #print '#ne', self, other        
+        try:
+            other = other.rescale(self.unit)
+            return self.value != other
+        except (ValueError, AttributeError):
+            #either wrong unit or no unit
+            return np.ones(self.shape, '?')
         return self.value != other
-
+            
     @with_doc(np.ndarray.__ge__)
     @wrap_comparison
     def __ge__(self, other):
@@ -839,7 +841,7 @@ p_dict[np.arctanh] = _d_arctrig
 
 
 if __name__ == '__main__':
-    from ufloat import ufloat
+    from .ufloat import ufloat
     s = UnitArray(1, {'s':1}, unitdef = True)
     m = UnitArray(1, {'m':1}, unitdef = True)
     ss = ufloat(1, {'s':1})

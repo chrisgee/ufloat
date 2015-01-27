@@ -27,10 +27,11 @@ and added if they have the same unit
 >>> 5*s + 12*m
 ValueError: Can't add two quantities with differnt units 5.0 [s] and 12 [m].
 """
-from ufloat import ufloat
-from uarray import UnitArray
-import funits
-import aunits
+from numpy import *
+from .ufloat import ufloat
+from .uarray import UnitArray
+#from . import funits
+#from . import aunits
 
 def unit_from_string(st):
     """the inverse of format_unit.
@@ -71,7 +72,6 @@ def unit_from_string(st):
     return udict
 
 def ufloat_from_string(st):
-    from numpy import *
     st = st.strip()
     uleft = st.rfind('[')
     uright = st.rfind(']')
@@ -85,3 +85,10 @@ def ufloat_from_string(st):
         return ufloat(1, unit)*value
     else:
         raise ValueError('could not find a unit in %s.'%st)
+        
+def execfile(filename, global_vars, local_vars):
+    with open(filename) as f:
+        code = compile(f.read(), filename, 'exec')
+        exec(code, global_vars, local_vars)
+    
+    

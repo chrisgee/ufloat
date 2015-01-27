@@ -28,65 +28,66 @@ u = list(flatten([[u for u in units] for d in data], scalarp=is_array))
 #print v
 #print u
 
-def basicmul():
+def test_basicmul():
     assert(5*f.s == ufloat(5,{'s':1}))
     assert(f.s*f.m == ufloat(1,{'s':1,'m':1}))
     assert(f.s*f.s == ufloat(1,{'s':2}))
     assert(a.s*a.m == UnitArray(1,{'s':1,'m':1}))
-    
 
-def basicdiv():
+def test_basicdiv():
     assert(5/f.s == ufloat(5,{'s':-1}))
     assert(f.s/f.m == ufloat(1,{'s':1,'m':-1}))
     assert(f.s/f.s == 1)
     assert(a.s/a.m == UnitArray(1,{'s':1,'m':-1}))
 
-def mul():
+def test_mul():
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             result = (lv*rv)*(lu*ru)            
             #print left, '*', right, '=', result 
             assert(all(left*right == result))
-    print 'multiplication ... passed'
+    print('multiplication ... passed')
 
-def div():
+def test_div():
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             result = (lv/rv)*(lu/ru)         
             #print left, '/', right, '=', result 
             assert(all(left/right == result))
-    print 'division ... passed'
+    print('division ... passed')
 
 
-def add():
+def test_add():
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             try:
                 dummy = lu+ru
             except:
+                assert(lu!=ru)
                 continue
             result = (lv+rv)*(ru)
             #print left, '+', right, '=', result 
             assert(all(left+right == result))
-    print 'add ... passed'
+    print('add ... passed')
 
-def sub():
+def test_sub():
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right, rv, ru in li:
             try:
                 dummy = lu-ru
             except:
+                assert(lu!=ru)
                 continue
             result = (lv-rv)*(ru)
             #print left, '-', right, '=', result 
             assert(all(left-right == result))
-    print 'subtract ... passed'
+    print('subtract ... passed')
 
-def pow():
+def test_pow():
     li = zip(l,v,u)
     for left, lv, lu in li:
         for right in v:
@@ -99,13 +100,30 @@ def pow():
             result = (lv**right)*lu**right
             #print left, '**', right, '=', result 
             assert(all(left**right == result))
-    print 'power ... passed'
+    print('power ... passed')
     
-basicmul()
-basicdiv()
-mul()
-div()
-add()
-sub()
-pow()
-print 'all tests passed'
+def test_cmp():
+    li = zip(l,v,u)
+    for left, lv, lu in li:
+        for right, rv, ru in li:
+            try:
+                all((left<right)) == all(lv<rv)
+                all((left==right)) == all(lv==rv)
+                all((left<=right)) == all(lv<=rv)
+                all((left>right)) == all(lv>rv)
+                all((left>=right)) == all(lv>=rv)
+                all((left!=right)) == all(lv!=rv)
+            except:
+                assert(lu!=ru)
+    print('comparison ... passed')
+    
+if __name__=='__main__':
+    test_basicdiv()
+    test_basicmul()
+    test_mul()
+    test_div()
+    test_add()
+    test_sub()
+    test_pow()
+    test_cmp()
+    print('all tests passed')

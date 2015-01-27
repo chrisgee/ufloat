@@ -14,9 +14,9 @@ python floats when it comes to multiplication etc.
 """
 from libc.stdlib cimport malloc, free, realloc
 
-from uarray import UnitArray, mulunit, divunit, powunit
+from .uarray import UnitArray, mulunit, divunit, powunit
 from numpy import ndarray
-import uarray
+from . import uarray
 
 
 cdef extern from "stdio.h":
@@ -393,33 +393,49 @@ cdef class ufloat:
     def __richcmp__(self, other, op):
         if isinstance(self, ufloat) and isinstance(other, ufloat):
             c = ucmp((<ufloat>self)._unit, (<ufloat>other)._unit)
-            if c==1:        
-                v = (<ufloat>self)._value
-                o = (<ufloat>other)._value
-                if op == 0:
-                    #le
-                    result = v<o
-                elif op == 2:
-                    #eq
-                    result = v==o
-                elif op == 4:
-                    #gr
-                    result = v>o
-                elif op == 1:
-                    #leq
-                    result = v<=o
-                elif op == 3:
-                    #neq
-                    result = v!=o
-                elif op == 5:
-                    #geq
-                    result = v>=o
-                else:
-                    raise ValueError('unknown op %d.'%op)
+            v = (<ufloat>self)._value
+            o = (<ufloat>other)._value
+        elif isinstance(self, ufloat):
+            c = ucmp((<ufloat>self)._unit, (<ufloat>getattr(other, 'unit', ufloat(1,{})))._unit)
+            v = float((<ufloat>self)._value)
+            o = getattr(other,'value',other)
+        elif isinstance(other, ufloat):
+            c = ucmp((<ufloat>other)._unit, (<ufloat>getattr(self, 'unit', ufloat(1,{})))._unit)
+            o = float((<ufloat>other)._value)
+            v = getattr(self, 'value', self)
+        else:
+            raise ValueError('Why here? %s, %s, %s'%(self,other,op))
+        if c==1:        
+            if op == 0:
+                result = (v<o)
+                #print '#le', result
+            elif op == 2:
+                result = (v==o)
+                #print '#eq', result
+            elif op == 4:
+                result = (v>o)
+                #print '#gr', result
+            elif op == 1:
+                result = (v<=o)
+                #print '#leq', result
+            elif op == 3:
+                result = (v!=o)
+                #print '#neq', result
+            elif op == 5:
+                result = (v>=o)
+                #print '#geq', result
+            else:
+                raise ValueError('unknown op %d.'%op)
+        else:
+            if op == 2:
+                #print '#things with different units are not equal'
+                result = False
+            elif op == 3:
+                #print '#dito'
+                result = True
             else:
                 raise ValueError('can\'t compare apples to peaches')
-        else:
-            raise ValueError('can\'t compare to values without unit')
+        #print(result)
         return result
         
     property value:
