@@ -11,5 +11,5 @@ filename = join(dirname(__file__),'units.py')
 with open(filename) as f:
     code = compile(f.read(), filename, 'exec')
     exec(code, {'u': lambda v, d: a(v,d, unitdef = True)}, locals())
-    
+del code
 
