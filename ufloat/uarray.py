@@ -9,6 +9,8 @@ All the units conversion stuff has been removed including all the logic
 around it to speed up things. It integrates with a scalar float class with
 units 'ufloat' that is a cython extension type.
 """
+from __future__ import division
+
 import numpy as np
 from functools import wraps
 import sys
@@ -16,7 +18,7 @@ STRREP = False
 
 def mulunit(unit1, unit2):
     u = unit1.copy()
-    for a, exp in unit2.iteritems():
+    for a, exp in unit2.items():
         if a in u:
             u[a] += exp
             if u[a]==0:
@@ -27,7 +29,7 @@ def mulunit(unit1, unit2):
 
 def divunit(unit1, unit2):
     u = unit1.copy()
-    for a, exp in unit2.iteritems():
+    for a, exp in unit2.items():
         if a in u:
             u[a] -= exp
             if u[a]==0:
@@ -47,7 +49,7 @@ def simplify_unit(unit):
 def format_unit(unit):
     nom = ''
     denom = ''
-    for u, exp in unit.iteritems():
+    for u, exp in unit.items():
         if exp > 0:
             if exp > 1:
                 nom += '%s**%s '%(u,abs(exp))
@@ -69,7 +71,7 @@ def format_unit(unit):
 
 def powunit(unit, exp):
     u = {}
-    for unit, e in unit.iteritems():
+    for unit, e in unit.items():
         u[unit]=e*exp
     return u
 
@@ -424,23 +426,28 @@ class UnitArray(np.ndarray):
     @with_doc(np.ndarray.__lt__)
     @wrap_comparison
     def __lt__(self, other):
+        #print("#lt", self, other)
         return self.value < getattr(other, 'value', other)
 
     @with_doc(np.ndarray.__le__)
     @wrap_comparison
     def __le__(self, other):
+        #print("#le", self, other)
         return self.value <= getattr(other, 'value', other)
 
     @with_doc(np.ndarray.__eq__)
     def __eq__(self, other):
+        #print("#eq", self, other)
         try:
             other = other.rescale(self.unit)
         except (ValueError, AttributeError):
             return np.zeros(self.shape, '?')
+        #print("#eq", self.value, other)
         return self.value == other
 
     @with_doc(np.ndarray.__ne__)
     def __ne__(self, other):
+        #print("#ne", self, other)
         #print '#ne', self, other        
         try:
             other = other.rescale(self.unit)
@@ -448,17 +455,20 @@ class UnitArray(np.ndarray):
         except (ValueError, AttributeError):
             #either wrong unit or no unit
             return np.ones(self.shape, '?')
+        #print("#neq", self.value, other)
         return self.value != other
             
     @with_doc(np.ndarray.__ge__)
     @wrap_comparison
     def __ge__(self, other):
-        return self.value >= other
+        #print("#ge", self, other)
+        return self.value >= getattr(other, 'value', other)
 
     @with_doc(np.ndarray.__gt__)
     @wrap_comparison
     def __gt__(self, other):
-        return self.value > other
+        #print("#gt", self, other)
+        return self.value > getattr(other, 'value', other)
 
     #I don't think this implementation is particularly efficient,
     #perhaps there is something better

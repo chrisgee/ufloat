@@ -12,6 +12,8 @@ The Idea is based on the unum package. However the units are much simpler
 In fact this implementation is only about a factor three slower than usual
 python floats when it comes to multiplication etc.
 """
+from __future__ import division
+
 from libc.stdlib cimport malloc, free, realloc
 
 from .uarray import UnitArray, mulunit, divunit, powunit
@@ -68,13 +70,17 @@ cdef unit* uinitd(unit* self, dict u) except NULL:
     if not self.ndims == len(u):
         raise ValueError('the length of the unit struct needs to be the same as the dict')
     i=0
-    for k, v in u.iteritems():
-        if not k in names:
-            names[k]=k
+    for k, v in u.items():
+        if isinstance(k, str):
+            name = k.encode('UTF-8') #we encode everything into utf-8üs¨ß        
+        else:
+            name = k
+        if not name in names:
+            names[name]=name
         else:
             #make sure we use the string that was stored in names
-            k = names[k]
-        self.dims[i].name = k
+            name = names[name]
+        self.dims[i].name = name
         self.dims[i].exponent = v
         i+=1
 
@@ -112,19 +118,19 @@ cdef object uformat(unit *self):
         exp = self.dims[i].exponent
         if exp > 0:
             if exp > 1:
-                nom += '%s**%s '%(u,abs(exp))
+                nom += u'%s**%s '%(u,abs(exp))
             else:
-                nom += '%s '%u
+                nom += u'%s '%u
         else:
             if exp < -1:
-                denom += '%s**%s '%(u,abs(exp))
+                denom += u'%s**%s '%(u,abs(exp))
             else:
-                denom += '%s '%u
-    fill = ''
-    if not denom == '':
-        fill = '/'
-        if nom == '':
-            nom = '1'
+                denom += u'%s '%u
+    fill = u''
+    if not denom == u'':
+        fill = u'/'
+        if nom == u'':
+            nom = u'1'
 
     return nom.strip()+fill+denom.strip()
 
@@ -209,7 +215,7 @@ cdef dict utodict(unit* self):
     if self == NULL:
         return res
     for i in xrange(self.ndims):
-        res[self.dims[i].name]=self.dims[i].exponent
+        res[self.dims[i].name.decode('UTF-8')]=self.dims[i].exponent
     return res
 
 
@@ -319,6 +325,36 @@ cdef class ufloat:
         #print "self: %s, other: %s"%(s,o)
         return newval(s._value*o, s._unit, True)
 
+    def __truediv__(self, other):
+        cdef ufloat s
+        cdef int exp
+#        print self, other
+        if isinstance(other, ufloat) and isinstance(self, ufloat):
+                return newval((<ufloat>self)._value/(<ufloat>other)._value,
+                              umul((<ufloat>self)._unit,(<ufloat>other)._unit,-1))
+        elif isinstance(other, ufloat):
+            if isinstance(self, ndarray):
+                #print 'self.nd, other float'
+                ounit = getattr(self,'unitDict',{})
+                ovalue = getattr(self, 'value', self)
+                return UnitArray(ovalue/<ufloat>other.value,divunit(ounit, other.unitDict), checkunit = False)
+            s = other
+            o = self
+            exp = -1
+            return newval(o/s._value, upow(s._unit,-1))
+        elif isinstance(self, ufloat):
+            if isinstance(other, ndarray):
+                ounit = getattr(other,'unitDict',{})
+                ovalue = getattr(other, 'value', other)
+                return UnitArray(<ufloat>self.value/ovalue,divunit(self.unitDict, ounit), checkunit = False)
+            s = self
+            o = other
+            exp = 1
+        else:
+            raise Exception("why did I get here?")
+#        print "self: %s, other: %s"%(s,o)
+        return newval(s._value/o, upow(s._unit,exp))
+
     def __div__(self, other):
         cdef ufloat s
         cdef int exp
@@ -348,7 +384,7 @@ cdef class ufloat:
             raise Exception("why did I get here?")
 #        print "self: %s, other: %s"%(s,o)
         return newval(s._value/o, upow(s._unit,exp))
-    
+        
     def __pow__(self, other, modulo):
         #FIXME: modulo not supported (what does it?)
         cdef ufloat s
