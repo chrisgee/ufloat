@@ -107,12 +107,12 @@ def test_cmp():
     for left, lv, lu in li:
         for right, rv, ru in li:
             try:
-                all((left<right)) == all(lv<rv)
-                all((left==right)) == all(lv==rv)
-                all((left<=right)) == all(lv<=rv)
-                all((left>right)) == all(lv>rv)
-                all((left>=right)) == all(lv>=rv)
-                all((left!=right)) == all(lv!=rv)
+                assert(all((left<right)) == all(lv<rv))
+                assert(all((left==right)) == all(lv==rv))
+                assert(all((left<=right)) == all(lv<=rv))
+                assert(all((left>right)) == all(lv>rv))
+                assert(all((left>=right)) == all(lv>=rv))
+                assert(all((left!=right)) == all(lv!=rv))
             except:
                 assert(lu!=ru)
     print('comparison ... passed')
