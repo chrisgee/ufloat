@@ -1,21 +1,43 @@
+ufloat
+======
+
 ufloat is a package that provides a fast floatingpoint extension type 
 with unit support.
 
-To build this package, cython is required, which can be obtained
-using
+Requirements
+============
 
-$ sudo easy_install cython 
+* python 2.7 or python 3
+* c build environment appropriate for your python version
+* numpy
+* cython (during setup)
+* nose (for testing the library)
 
-or using pip
+Installation
+============
 
-$ pip install cython
+To build this package, setuptools, cython and numpy is required, in addition to run tests,
+we require nose during setup. 
 
-from here, the package can be built (provided numpy is  installed)
-using
+if you don't have setuptools it can be installed using the instructions given here:
 
-$ python setup.py build
+https://pypi.python.org/pypi/setuptools#installation-instructions
 
-if you are on windows and are using python(x,y), you have the mingw32 compiler
+The rest of the dependencies are installed if required during the setup process 
+(if there is a internet connection). So it should be sufficient to do
+
+$ python setup.py install
+
+in the package directory (where this README is located)
+
+To test that the package is working as intended run
+
+$ python setup.py test
+
+Windows
+=======
+ 
+If you are on windows and are using python(x,y), you have the mingw32 compiler
 installed. Then instead of the above you should use
 
 $ python setup.py build -cmingw32

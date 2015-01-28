@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 
 from setuptools import setup, Extension
-#from Cython.Distutils import build_ext
+from Cython.Distutils import build_ext
 from numpy import get_include
 
 packages = ['ufloat']
@@ -19,6 +19,7 @@ setup(name="ufloat",
       author_email = "christoph.gohle@mpq.mpg.de",
       ext_modules=ext_modules,
       packages = packages,
+      cmdclass = {'build_ext': build_ext},
       include_dirs = [get_include()],
       requires = requires,
       setup_requires = ['cython','nose>=1.0'],
