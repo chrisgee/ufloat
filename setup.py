@@ -21,6 +21,7 @@ setup(name="ufloat",
       packages = packages,
       include_dirs = [get_include()],
       requires = requires,
+      setup_requires = ['cython','nose>=1.0'],
       test_suite = 'nose.collector'
       )
 
