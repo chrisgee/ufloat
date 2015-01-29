@@ -1,4 +1,20 @@
 # -*- coding: utf-8 -*-
+#    ufloat - fast python floats with physical units
+#    Copyright (C) 2015  Christoph Gohle <christoph.gohle@mpq.mpg.de>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 """
 Created on Sat Apr  7 17:08:22 2012
 
@@ -222,7 +238,7 @@ cdef dict utodict(unit* self):
 
 
 
-cdef object newval(double value, unit* u, copy = False):
+cdef object newval(double value, unit* u, bint copy = False):
     """helper for creating new unit values"""
     cdef ufloat res
     if u.ndims>0: # and not value == 0:
@@ -239,7 +255,7 @@ cdef object newval(double value, unit* u, copy = False):
         else:
             pass
         return value
-
+        
 #########################################
 # ufloat: a float class with units
 #########################################
@@ -280,13 +296,8 @@ cdef class ufloat:
             self._unit = NULL
             #raise ValueError('Either needs to be a ufloat or a unit has to be specified)
 
-#    def __init__(self, value, u = None):
-#        if u and isinstance(u, dict):
-#            print('init')
-#            uinitd(self._unit, u)
-#        elif isinstance(value, ufloat):
-#            uinitu(self._unit, (<ufloat>u)._unit)
 
+        
     def __dealloc__(self):
         ufree(self._unit)
 
@@ -325,6 +336,10 @@ cdef class ufloat:
         #print "self: %s, other: %s"%(s,o)
         return newval(s._value*o, s._unit, True)
 
+
+    #ATTENTION __truediv__ and __div__ have the same code (to support both python2 and python3)
+    #an update on one REQUIRES the same update on the other
+    #FIXME: is there some construct to get rid of this redundant piece of code?
     def __truediv__(self, other):
         cdef ufloat s
         cdef int exp
