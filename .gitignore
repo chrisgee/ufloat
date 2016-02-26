@@ -1,7 +1,7 @@
 build
 *.c
 *.so
-
+*.pyc
 .eggs/
 ufloat.egg-info/
 __pycache__
