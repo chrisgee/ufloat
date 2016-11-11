@@ -40,6 +40,8 @@ MHz = 1000*kHz
 GHz = 1000*MHz
 mHz = 0.001*Hz
 uHz = 0.001*mHz
+#electric
+C = u(1, {'C':1})
 V = u(1,{'V':1})
 mV = 0.001*V
 uV = 0.001*mV
@@ -52,11 +54,12 @@ kA = 1000*A
 MA = 1000*kA
 #add more units here!
 dBm = u(1., {'dBm':1})
-#weight
+#mass
 kg = u(1., {'kg':1})
 g = 1e-3*kg
 mg = 1e-6*kg
 ug = 1e-9*kg
+t = 1e3*kg
 #temperature
 K = u(1., {'K':1})
 mK = 1e-3*K
@@ -70,3 +73,8 @@ nG = 1e-3*uG
 pG = 1e-3*nG
 kG = 1e3 * G
 MG = 1e3 * kG
+T = 1e4*G
+mT = 1e-3*T
+uT = 1e-3*mT
+#energy
+J = kg*m**2/s**2
