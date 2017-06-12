@@ -78,3 +78,12 @@ mT = 1e-3*T
 uT = 1e-3*mT
 #energy
 J = kg*m**2/s**2
+#power
+W = u(1., {"W":1})
+mW = W*1e-3
+uW = W*1e-6
+nW = W*1e-9
+kW = W*1e3
+MW = W*1e6
+GW = W*1e9
+
