@@ -13,7 +13,7 @@ for e in ext_modules:
 	e.pyrex_directives = {"boundscheck": False}
 
 setup(name="ufloat",
-      version="0.1.0",
+      version="0.2.0",
       description="Fast physical units for scalars and numpy arrays and an extension to h5py for them.",
       author = "Christoph Gohle, MPI für Quantenoptik",
       author_email = "christoph.gohle@mpq.mpg.de",

@@ -44,7 +44,7 @@ and added if they have the same unit
 ValueError: Can't add two quantities with differnt units 5.0 [s] and 12 [m].
 """
 from numpy import *
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 from .ufloat import ufloat
 from .uarray import UnitArray
 #from . import funits
