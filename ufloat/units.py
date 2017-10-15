@@ -87,4 +87,7 @@ nW = W*1e-9
 kW = W*1e3
 MW = W*1e6
 GW = W*1e9
-
+# pressure
+Pa = u(1., {"Pa":1})
+mPa = 1e-3 * Pa
+kPa = 1e3 * Pa
