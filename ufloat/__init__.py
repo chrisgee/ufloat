@@ -42,7 +42,10 @@ and added if they have the same unit
 
 >>> 5*s + 12*m
 ValueError: Can't add two quantities with differnt units 5.0 [s] and 12 [m].
+
 """
+
+
 from numpy import *
 __version__ = '0.2.1'
 from .ufloat import ufloat
