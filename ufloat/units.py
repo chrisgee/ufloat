@@ -38,6 +38,7 @@ Hz = 1/s
 kHz = 1000*Hz
 MHz = 1000*kHz
 GHz = 1000*MHz
+THz = 1000*GHz
 mHz = 0.001*Hz
 uHz = 0.001*mHz
 #electric
