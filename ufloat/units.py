@@ -80,7 +80,7 @@ uT = 1e-3*mT
 #energy
 J = kg*m**2/s**2
 #power
-W = u(1., {"W":1})
+W = J/s
 mW = W*1e-3
 uW = W*1e-6
 nW = W*1e-9
