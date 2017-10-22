@@ -12,9 +12,13 @@ except:
 
 from numpy import get_include
 
-packages = ['ufloat', 'ufloat.qh5py']
-ext_modules = [Extension("ufloat.ufloat",["ufloat/ufloat.pyx"])]
-requires = ['numpy']
+packages = ['ufloat',
+            'ufloat.qh5py']
+
+ext_modules = [Extension("ufloat.ufloat", ["ufloat/ufloat.pyx"])]
+
+requires = ['numpy', 'h5py']
+
 # You can add directives for each extension too # by attaching the ‘pyrex_directives‘
 for e in ext_modules:
 	e.pyrex_directives = {"boundscheck": False}
@@ -29,7 +33,7 @@ setup(name="ufloat",
       cmdclass = {'build_ext': build_ext} if HAVE_CYTHON else {},
       include_dirs = [get_include()],
       requires = requires,
-      setup_requires = ['Cython','nose>=1.0'],
+      setup_requires = ['Cython', 'nose>=1.0'],
       test_suite = 'nose.collector'
       )
 
