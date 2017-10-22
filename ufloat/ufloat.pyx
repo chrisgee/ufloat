@@ -134,20 +134,19 @@ cdef object uformat(unit *self):
         exp = self.dims[i].exponent
         if exp > 0:
             if exp > 1:
-                nom += u'%s**%s '%(u,abs(exp))
+                nom += u'{}**{} '.format(u.decode('UTF-8'),abs(exp))
             else:
-                nom += u'%s '%u
+                nom += u'{} '.format(u.decode('UTF-8'))
         else:
             if exp < -1:
-                denom += u'%s**%s '%(u,abs(exp))
+                denom += u'{}**{} '.format(u.decode('UTF-8'),abs(exp))
             else:
-                denom += u'%s '%u
+                denom += u'{} '.format(u.decode('UTF-8'))
     fill = u''
     if not denom == u'':
         fill = u'/'
         if nom == u'':
             nom = u'1'
-
     return nom.strip()+fill+denom.strip()
 
 cdef unit* upow(unit* self, float exp) except NULL:

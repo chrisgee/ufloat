@@ -38,6 +38,7 @@ Hz = 1/s
 kHz = 1000*Hz
 MHz = 1000*kHz
 GHz = 1000*MHz
+THz = 1000*GHz
 mHz = 0.001*Hz
 uHz = 0.001*mHz
 #electric
@@ -78,3 +79,15 @@ mT = 1e-3*T
 uT = 1e-3*mT
 #energy
 J = kg*m**2/s**2
+#power
+W = J/s
+mW = W*1e-3
+uW = W*1e-6
+nW = W*1e-9
+kW = W*1e3
+MW = W*1e6
+GW = W*1e9
+# pressure
+Pa = u(1., {"Pa":1})
+mPa = 1e-3 * Pa
+kPa = 1e3 * Pa
