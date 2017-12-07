@@ -91,13 +91,37 @@ atomic_unit_polarizability = 4 * pi * epsilon0 * bohrradius**3
 rydberg_constant = 0.5 * electronmass * c * alpha**2 / (hplanck)
 
 
+# ----------------------------------------------------------------- SI prefixes
+
+yocto = 1e-24
+zepto = 1e-21
+atto = 1e-18
+femto = 1e-15
+pico = 1e-12
+nano = 1e-9
+micro = 1e-6
+milli = 1e-3
+centi = 1e-2
+deci = 1e-1
+deka = 1e1
+hecto = 1e2
+kilo = 1e3
+mega = 1e6
+giga = 1e9
+tera = 1e12
+peta = 1e15
+exa = 1e18
+zetta = 1e21
+yotta = 1e24
+
+
 # ------------------------------------------------------------------------ Time
 
-ms = 1e-3 * s
-us = 1e-6 * s
-ns = 1e-9 * s
-ps = 1e-12 * s
-fs = 1e-15 * s
+ms = milli * s
+us = micro * s
+ns = nano * s
+ps = pico * s
+fs = femto * s
 
 second = s
 minute = 60 * s
@@ -110,13 +134,13 @@ week = 7 * day
 Hz = 1 / s
 hertz = Hz
 
-mHz = 1e-3 * Hz
-uHz = 1e-6 * Hz
+mHz = milli * Hz
+uHz = micro * Hz
 
-kHz = 1e3 * Hz
-MHz = 1e6 * Hz
-GHz = 1e9 * Hz
-THz = 1e12 * Hz
+kHz = kilo * Hz
+MHz = mega * Hz
+GHz = giga * Hz
+THz = tera * Hz
 
 # ------------------------------------------------------------------------ Mass
 
@@ -153,16 +177,16 @@ shortton = uston
 meter = m
 metre = m
 
-cm = 1e-2 * m
-mm = 1e-3 * m
-um = 1e-6 * m
+cm = centi * m
+mm = milli * m
+um = micro * m
 micron = um
-nm = 1e-9 * m
-km = 1e3 * m
+nm = nano * m
+km = kilo * m
 
 # imperial
 inch = 0.0254 * m
-mil = 1e-3 * inch
+mil = milli * inch
 thou = mil
 ft = 12 * inch
 foot = ft
@@ -184,12 +208,12 @@ barn = 1e-28 * m**2
 
 # ---------------------------------------------------------------------- Volume
 
-l = 1e-3 * m**3
+l = milli * m**3
 L = l
 liter = l
 litre = l
 
-ccm = 1e-6 * m**3
+ccm = micro * m**3
 
 # imperial
 
@@ -215,21 +239,21 @@ barrel = bbl
 
 ampere = A
 
-mA = 1e-3 * A
-uA = 1e-6 * A
-nA = 1e-9 * A
+mA = milli * A
+uA = micro * A
+nA = nano * A
 
-kA = 1e3 * A
-MA = 1e6 * A
+kA = kilo * A
+MA = mega * A
 
 # ----------------------------------------------------------------- Temperature
 
 kelvin = K
 
-mK = 1e-3 * K
-uK = 1e-6 * K
-nK = 1e-9 * K
-pK = 1e-12 * K
+mK = milli * K
+uK = micro * K
+nK = nano * K
+pK = pico * K
 
 # ------------------------------------------------------------------- Substance
 
@@ -239,10 +263,10 @@ candela = cd
 
 # ----------------------------------------------------------------- Information
 
-kbit = 1e3 * bit
-Mbit = 1e6 * bit
-Gbit = 1e9 * bit
-Tbit = 1e12 * bit
+kbit = kilo * bit
+Mbit = mega * bit
+Gbit = giga * bit
+Tbit = tera * bit
 
 kibit = 2**10 * bit
 Mibit = 2**10 * kibit
@@ -250,10 +274,10 @@ Gibit = 2**10 * Mibit
 Tibit = 2**10 * Gibit
 
 byte = 8 * bit
-kbyte = 1e3 * byte
-Mbyte = 1e6 * byte
-Gbyte = 1e9 * byte
-Tbyte = 1e12 * byte
+kbyte = kilo * byte
+Mbyte = mega * byte
+Gbyte = giga * byte
+Tbyte = tera * byte
 
 # ---------------------------------------------------------------------- Charge
 
@@ -265,45 +289,45 @@ coulomb = C
 V = m**2 * s**-3 * kg * A**-1
 volt = V
 
-mV = 1e-3 * V
-uV = 1e-6 * V
-nV = 1e-9 * V
+mV = milli * V
+uV = micro * V
+nV = nano * V
 
-kV = 1e3 * V
-MV = 1e6 * V
+kV = kilo * V
+MV = mega * V
 
 # ------------------------------------------------------- Magnetic flux density
 
 T = s**-2 * kg * A**-1
 tesla = T
 
-mT = 1e-3 * T
-uT = 1e-6 * T
-nT = 1e-9 * T
-pT = 1e-12 * T
+mT = milli * T
+uT = micro * T
+nT = nano * T
+pT = pico * T
 
 G = 1e-4 * T
 gauss = G
 
-mG = 1e-3 * G
-uG = 1e-6 * G
-nG = 1e-9 * G
-pG = 1e-12 * G
+mG = milli * G
+uG = micro * G
+nG = nano * G
+pG = pico * G
 
-kG = 1e3 * G
-MG = 1e6 * G
+kG = kilo * G
+MG = mega * G
 
 # --------------------------------------------------------- Electric resistance
 
 ohm = m**2 * s**-3 * kg * A**-2
 Ω = ohm
 
-mohm = 1e-3 * ohm
-uohm = 1e-6 * ohm
+mohm = milli * ohm
+uohm = micro * ohm
 
-kohm = 1e3 * ohm
-Mohm = 1e6 * ohm
-Gohm = 1e9 * ohm
+kohm = kilo * ohm
+Mohm = mega * ohm
+Gohm = giga * ohm
 
 # -------------------------------------------------------- Electric conductance
 
@@ -316,20 +340,20 @@ mho = S
 F = m**-2 * s**4 * kg * -1 * A**2
 farad = F
 
-mF = 1e-3 * F
-uF = 1e-6 * F
-nF = 1e-9 * F
-pF = 1e-12 * F
+mF = milli * F
+uF = micro * F
+nF = nano * F
+pF = pico * F
 
 # ------------------------------------------------------------------ Inductance
 
 H = m**2 * s**-2 * kg * A**-2
 henry = H
 
-mH = 1e-3 * H
-uH = 1e-6 * H
-nH = 1e-9 * H
-pH = 1e-12 * H
+mH = milli * H
+uH = micro * H
+nH = nano * H
+pH = pico * H
 
 # ---------------------------------------------------------------------- Energy
 
@@ -352,23 +376,23 @@ hartree = 2 * Ry
 W = J / s
 watt = W
 
-mW = W * 1e-3
-uW = W * 1e-6
-nW = W * 1e-9
-kW = W * 1e3
-MW = W * 1e6
-GW = W * 1e9
+mW = milli * W
+uW = micro * W
+nW = nano * W
+kW = kilo * W
+MW = mega * W
+GW = giga * W
 
 # -------------------------------------------------------------------- Pressure
 
 Pa = m**-1 * s**-2 * kg
 pascal = Pa
 
-mPa = 1e-3 * Pa
+mPa = milli * Pa
 kPa = 1e3 * Pa
 
 bar = 1e5 * Pa
-mbar = 1e-3 * bar
+mbar = milli * bar
 
 Torr = 20265.0 / 152.0 * Pa
 torr = Torr
