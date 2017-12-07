@@ -136,6 +136,7 @@ hertz = Hz
 
 mHz = milli * Hz
 uHz = micro * Hz
+μHz = uHz
 
 kHz = kilo * Hz
 MHz = mega * Hz
@@ -151,6 +152,7 @@ gram = g
 
 mg = 1e-6 * kg
 ug = 1e-9 * kg
+μg = ug
 
 t = 1e3 * kg
 ton = t
@@ -180,6 +182,7 @@ metre = m
 cm = centi * m
 mm = milli * m
 um = micro * m
+μm = um
 micron = um
 nm = nano * m
 km = kilo * m
@@ -241,6 +244,7 @@ ampere = A
 
 mA = milli * A
 uA = micro * A
+μA = uA
 nA = nano * A
 
 kA = kilo * A
@@ -252,6 +256,7 @@ kelvin = K
 
 mK = milli * K
 uK = micro * K
+μK = uK
 nK = nano * K
 pK = pico * K
 
@@ -291,6 +296,7 @@ volt = V
 
 mV = milli * V
 uV = micro * V
+μV = uV
 nV = nano * V
 
 kV = kilo * V
@@ -303,6 +309,7 @@ tesla = T
 
 mT = milli * T
 uT = micro * T
+μT = uT
 nT = nano * T
 pT = pico * T
 
@@ -311,6 +318,7 @@ gauss = G
 
 mG = milli * G
 uG = micro * G
+μG = uG
 nG = nano * G
 pG = pico * G
 
@@ -342,6 +350,7 @@ farad = F
 
 mF = milli * F
 uF = micro * F
+μF = uF
 nF = nano * F
 pF = pico * F
 
@@ -352,6 +361,7 @@ henry = H
 
 mH = milli * H
 uH = micro * H
+μH = uH
 nH = nano * H
 pH = pico * H
 
@@ -378,6 +388,7 @@ watt = W
 
 mW = milli * W
 uW = micro * W
+μW = uW
 nW = nano * W
 kW = kilo * W
 MW = mega * W
