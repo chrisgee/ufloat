@@ -376,6 +376,7 @@ cal = calorie
 erg = 1e-7 * J
 
 eV = electroncharge.value * J
+electronvolt = eV
 
 Ry = rydberg_constant.value * hplanck.value / c.value * J
 rydberg = Ry
