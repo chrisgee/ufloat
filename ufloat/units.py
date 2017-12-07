@@ -167,7 +167,7 @@ uspound = lb
 ounce = pound / 16
 oz = ounce
 
-dram = ounce / 15
+dram = ounce / 16
 dr = dram
 
 uston = 2000 * pound
