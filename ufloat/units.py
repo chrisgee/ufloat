@@ -38,24 +38,24 @@ extensive collection of units.
 
 # SI basic units
 
-s = u(1, {'s': 1})      # time
-kg = u(1, {'kg': 1})    # mass
-m = u(1, {'m': 1})      # length
-A = u(1, {'A': 1})      # current
-K = u(1, {'K': 1})      # temperature
-mol = u(1, {'mol': 1})  # substance
-cd = u(1, {'cd': 1})    # luminous intensity
+s = u(1.0, {'s': 1})      # time
+kg = u(1.0, {'kg': 1})    # mass
+m = u(1.0, {'m': 1})      # length
+A = u(1.0, {'A': 1})      # current
+K = u(1.0, {'K': 1})      # temperature
+mol = u(1.0, {'mol': 1})  # substance
+cd = u(1.0, {'cd': 1})    # luminous intensity
 
 # nonstandard units
 
-bit = u(1, {'bit': 1})  # information
-dBm = u(1, {'dBm': 1})  # power
+bit = u(1.0, {'bit': 1})  # information
+dBm = u(1.0, {'dBm': 1})  # power
 
 # ----------------------------------------------------------- Natural constants
 
 pi = 3.141592653589793238
 
-c = 299792458 * m * s**-1
+c = 299792458.0 * m * s**-1
 speedoflight = c
 
 h = 6.62606957e-34 * m**2 * s**-1 * kg
@@ -73,20 +73,20 @@ amu = 1.660538921e-27 * kg
 
 avogadro = 6.02214129e+23 * mol**-1
 
-mu0 = 4 * pi * 1e-7 * m * s**-2 * kg * A**-2
+mu0 = 4.0 * pi * 1e-7 * m * s**-2 * kg * A**-2
 vacuumpermeability = mu0
 
 epsilon0 = 1.0 / (mu0 * c**2)
 vacuumpermittivity = epsilon0
 
-a0 = 4 * pi * epsilon0 * hbar**2 / (electronmass * electroncharge**2)
+a0 = 4.0 * pi * epsilon0 * hbar**2 / (electronmass * electroncharge**2)
 bohrradius = a0
 
 bohrmagneton = electroncharge * hbar / (2 * electronmass)
 
 alpha = 1e-7 * electroncharge**2 * c / hbar
 
-atomic_unit_polarizability = 4 * pi * epsilon0 * bohrradius**3
+atomic_unit_polarizability = 4.0 * pi * epsilon0 * bohrradius**3
 
 rydberg_constant = 0.5 * electronmass * c * alpha**2 / (hplanck)
 
