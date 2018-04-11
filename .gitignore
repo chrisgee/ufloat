@@ -6,3 +6,4 @@ build
 ufloat.egg-info/
 __pycache__
 dist/
+.ropeproject
